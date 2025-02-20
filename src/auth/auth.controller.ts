@@ -10,4 +10,8 @@ export class AuthController {
   async login(@Body() data: { email: string; password: string }) {
     return firstValueFrom(this.authService.send({ cmd: 'login' }, data));
   }
+  @Post('register')
+  async register(@Body() data: { email: string; password: string }) {
+    return firstValueFrom(this.authService.send({ cmd: 'register' }, data));
+  }
 }
