@@ -1,22 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-
+import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{
+    logger: ['log', 'error', 'warn', 'debug', 'verbose'], // ✅ Enable all log levels
+  });
   app.enableCors();
-  // Connect to Auth Microservice
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.TCP,
-  //   options: { host: '127.0.0.1', port: 3001 }, // Auth Microservice
-  // });
-
-  // Connect to Users Microservice
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.TCP,
-  //   options: { host: '127.0.0.1', port: 3002 }, // Users Microservice
-  // });
-
+  app.use(cookieParser());
   await app.startAllMicroservices();
   await app.listen(3000);
   console.log('API Gateway is running on port 3000');
