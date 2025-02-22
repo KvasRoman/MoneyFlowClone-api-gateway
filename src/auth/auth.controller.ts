@@ -39,7 +39,6 @@ export class AuthController {
   }
   @Get('hello')
   async Hello(@Body() data: {}, @Req() request: Request, @Res() response: Response){
-    Logger.log(request['user'].status,"Status")
-    return response.status(request['user'].status).json({message: "invalid Token"});
+    return response.json({message: "hello"});
   }
 }
