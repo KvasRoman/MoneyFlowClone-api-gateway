@@ -4,24 +4,24 @@ import { TransactionService } from './transaction.service';
 @Controller('transaction')
 export class TransactionController {
 constructor(private readonly transactionService: TransactionService) {}
-
+    
     @Get("list")
     async getTransactions(
-        @Query() page: number,
+        @Query('page') page: number,
         @Req() req){
         try{
-            this.transactionService.getTransactions(req.user.accountId, page, 50)
+            return await this.transactionService.getTransactions(req.user.accountId, page, 50)
         }
         catch(e){
             Logger.error(e)
         }
     }
-    @Get("/:id")
+    @Get(":id")
     async getTransaction(
-        @Param() id:string,
+        @Param('id') id:string,
         @Req() req){
             try{
-                this.transactionService.getTransaction(id,req.user.accountId)
+                return await this.transactionService.getTransaction(id,req.user.accountId)
             }
             catch(e){
                 Logger.error(e)
@@ -39,9 +39,9 @@ constructor(private readonly transactionService: TransactionService) {}
             Logger.error(e)
         }
     }
-    @Patch("/:id")
+    @Patch(':id')
     async updateTransaction(
-        @Param() id: string,
+        @Param('id') id: string,
         @Body() data: { amount?: number, description?: string, transactionDate?: Date, currency?: string },
         @Req() req){
             try{
@@ -51,12 +51,12 @@ constructor(private readonly transactionService: TransactionService) {}
                 Logger.error(e)
             }
     }
-    @Delete("/:id")
+    @Delete(":id")
     async deleteTransaction(
-        @Param() id:string,
+        @Param('id') id:string,
         @Req() req){
         try{
-            this.transactionService.deleteTransaction(id,req.user.accountId)
+            await this.transactionService.deleteTransaction(id,req.user.accountId)
         }
         catch(e){
             Logger.error(e)
