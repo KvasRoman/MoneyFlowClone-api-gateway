@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 @Module({
-    imports: [
+  imports: [
     ClientsModule.register([
       {
         name: 'USER_SERVICE',
