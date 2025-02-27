@@ -16,6 +16,8 @@ export class JwtAuthGuard implements CanActivate {
     }
     
     const request = context.switchToHttp().getRequest();
+
+    const response = context.switchToHttp().getRequest();
     
     const authHeader = request.headers['authorization'];
     
@@ -28,7 +30,7 @@ export class JwtAuthGuard implements CanActivate {
     const accessToken = authHeader.split(' ')[1]; // Extract token
     
     try {
-      //problem starts here!!!!!
+      
       // Validate access token
       const result = await this.authClient
         .send({cmd: 'validate_token'}, { token: accessToken, refreshToken: refreshToken })

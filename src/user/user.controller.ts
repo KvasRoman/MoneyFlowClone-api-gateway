@@ -2,21 +2,18 @@ import { Controller, Get, UseGuards, Request, Inject, Post, Body, Logger } from 
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UserService } from './user.service';
+
 @Controller('user')
 export class UserController {
-  constructor(@Inject("USER_SERVICE") private readonly userService: ClientProxy) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('profile')
   async getProfile(@Request() req) {
-    Logger.log(req.user);
-    return await firstValueFrom(this.userService.send({cmd: "get_user"}, {accountId: req.user.accountId}));
+    return await this.userService.getProfile(req.user.accountId);
   }
-  @Post('register')
-  async registerUser(@Body() data: {firstName: string, lastName?: string},@Request() req){
-    await firstValueFrom(this.userService.send({cmd: "create_user"}, {
-      accountId: req.user.accountId, 
-      firstName: data.firstName,
-      lastName: data.lastName
-    }));
-  }
+  // @Post('register')
+  // async registerUser(@Body() data: {firstName: string, lastName?: string},@Request() req){
+  //   //return await this.userService.createProfile(req.)
+  // }
 }

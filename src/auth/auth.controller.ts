@@ -4,41 +4,48 @@ import { firstValueFrom } from 'rxjs';
 import { Response, Request, response } from 'express';
 import { Public } from 'src/common/decorators/public.decorator';
 import { json } from 'node:stream/consumers';
+import { AuthService } from './auth.service';
+import { UserService } from 'src/user/user.service';
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject('AUTH_SERVICE') private readonly authService: ClientProxy) {}
-  private readonly logger = new Logger(AuthController.name);
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService) {}
   @Public()
   @Post('login')
   async login(@Body() data: { email: string; password: string },@Res() res: Response) {
-    const serviceResponse = await firstValueFrom(this.authService.send({ cmd: 'login' }, data));
-    // Set refresh token as an HttpOnly cookie
-    res.cookie('refreshToken', serviceResponse.refreshToken, {
+    const authServiceResult = await this.authService.login(data.email,data.password);
+    
+    
+    const user = await this.userService.getProfile(authServiceResult.accountId);
+    user.email = data.email;
+
+    //Refresh token
+    res.cookie('refreshToken', authServiceResult.refreshToken, {
       httpOnly: true, // Prevents access from JavaScript
       secure: true,   // Ensures cookie is sent only over HTTPS (for production)
       sameSite: 'strict', // CSRF protection
     });
 
     // Send access token in response
-    return res.json({ accessToken: serviceResponse.accessToken });
+    return res.json({ accessToken: authServiceResult.accessToken, user });
   }
   @Public()
   @Post('register')
   async register(@Body() data: { email: string; password: string },@Res() res: Response) {
-    Logger.log("Starting register process");
-    const serviceResponse = await firstValueFrom(this.authService.send({ cmd: 'register' }, data));
-    Logger.log(serviceResponse);
-    res.cookie('refreshToken', serviceResponse.refreshToken, {
+    //Register Account
+    const authServiceResult = await this.authService.register(data.email,data.password);
+
+    const user = await this.userService.createProfile(authServiceResult.account.id);
+    user.email = data.email;
+    //Refresh token
+    res.cookie('refreshToken', authServiceResult.refreshToken, {
       httpOnly: true, // Prevents access from JavaScript
       secure: true,   // Ensures cookie is sent only over HTTPS (for production)
       sameSite: 'strict', // CSRF protection
     });
-    Logger.log("adding cookies");
+    
     // Send access token in response
-    return res.json({ accessToken: serviceResponse.accessToken });
-  }
-  @Get('hello')
-  async Hello(@Body() data: {}, @Req() request: Request, @Res() response: Response){
-    return response.json({message: "hello"});
+    return res.json({ accessToken: authServiceResult.accessToken,user});
   }
 }
