@@ -17,8 +17,8 @@ export class AuthController {
     const authServiceResult = await this.authService.login(data.email,data.password);
     
     
-    const user = await this.userService.getProfile(authServiceResult.accountId);
-    user.email = data.email;
+    const user = await this.userService.getProfile(authServiceResult.account.id);
+    user.email = authServiceResult.account.email;
 
     //Refresh token
     res.cookie('refreshToken', authServiceResult.refreshToken, {

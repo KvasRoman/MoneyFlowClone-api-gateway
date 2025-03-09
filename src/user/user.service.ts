@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -9,7 +9,6 @@ export class UserService {
     async getProfile(accId: string){
         
         const serviceResponse = await firstValueFrom(this.userService.send({cmd: "get_user"}, {accountId: accId}));
-        
         const {id,accountId, createdAt,updatedAt,
             ...user} = serviceResponse;
         return user;

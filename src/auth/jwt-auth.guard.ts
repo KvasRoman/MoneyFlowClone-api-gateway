@@ -35,6 +35,7 @@ export class JwtAuthGuard implements CanActivate {
       const result = await this.authClient
         .send({cmd: 'validate_token'}, { token: accessToken, refreshToken: refreshToken })
         .toPromise();
+      
       request.user = result; // Attach user info to request
       return true;
     } catch (error) {

@@ -17,4 +17,9 @@ export class AuthService {
 
     return serviceResponse;
   }
+  async getEmail(accountId: string){
+    const serviceResponse = await firstValueFrom(this.authService.send({ cmd: 'get_email' },  {accountId}));
+
+    return serviceResponse;
+  }
 }

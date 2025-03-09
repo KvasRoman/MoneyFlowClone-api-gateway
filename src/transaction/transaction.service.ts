@@ -11,6 +11,7 @@ export class TransactionService {
             this.transactionService.send({ cmd: "get_single_transaction" }, { id: id, accountId: accountId }));
     }
     async getTransactions(accountId: string, page: number, limit: number) {
+        
         return await firstValueFrom(
             this.transactionService.send({ cmd: "get_transactions" }, {
                 accountId: accountId,
@@ -23,7 +24,7 @@ export class TransactionService {
             this.transactionService.send({ cmd: "update_transaction" }, { id: id, accountId: accountId, dto: dto }));
     }
     async createTransaction(dto: {accountId: string, amount: number, desicription?: string, transactionDate: Date, currency: string}) {
-        Logger.log(dto, "api-dto")
+        
         return await firstValueFrom(
             this.transactionService.send({ cmd: "create_transaction" }, dto));
     }
