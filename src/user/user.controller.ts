@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Inject, Post, Body, Logger } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, Inject, Post, Body, Logger, Put } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -19,8 +19,9 @@ export class UserController {
     const user = await this.userService.getProfile(account.id);
     return {email: account.email,...user};
   }
-  // @Post('register')
-  // async registerUser(@Body() data: {firstName: string, lastName?: string},@Request() req){
-  //   //return await this.userService.createProfile(req.)
-  // }
+  @Put()
+  async editProfile(@Request() req, @Body() data: {firstName: string}){
+    const account: AccountValidateDTO = req.user.account;
+    return await this.userService.updateProfile(account.id, data.firstName);
+  }
 }

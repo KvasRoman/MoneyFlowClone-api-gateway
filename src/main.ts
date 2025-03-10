@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(cookieParser());
   await app.startAllMicroservices();
-  await app.listen(3000);
+  await app.listen(3000, '0.0.0.0');
   console.log('API Gateway is running on port 3000');
 }
 bootstrap();

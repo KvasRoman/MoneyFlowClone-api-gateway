@@ -14,8 +14,8 @@ export class UserService {
         return user;
     }
     
-    async updateProfile(){
-
+    async updateProfile(accountId: string, firstName: string){
+        return await firstValueFrom(this.userService.send({cmd: "update_user"}, {accountId, firstName}))
     }
     async createProfile(accId: string){
         const serviceResponse = await firstValueFrom(this.userService.send({cmd: "create_user"}, {
