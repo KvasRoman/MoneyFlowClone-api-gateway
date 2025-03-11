@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Put, Query, Req } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { AccountValidateDTO } from 'src/dto/account-validate';
 
@@ -29,16 +29,15 @@ export class TransactionController {
         @Req() req) {
         const account: AccountValidateDTO = req.user.account;
         
-        this.transactionService.createTransaction({ ...data, accountId: account.id })
-
+        return await this.transactionService.createTransaction({ ...data, accountId: account.id })
     }
-    @Patch(':id')
+    @Put(':id')
     async updateTransaction(
         @Param('id') id: string,
         @Body() data: { amount?: number, description?: string, transactionDate?: Date, currency?: string },
         @Req() req) {
         const account: AccountValidateDTO = req.user.account;
-        this.transactionService.updateTransaction(id, account.id, data)
+        return await this.transactionService.updateTransaction(id, account.id, data)
 
     }
     @Delete(":id")
@@ -46,7 +45,7 @@ export class TransactionController {
         @Param('id') id: string,
         @Req() req) {
         const account: AccountValidateDTO = req.user.account;
-        await this.transactionService.deleteTransaction(id, account.id)
+        return await this.transactionService.deleteTransaction(id, account.id)
 
     }
 }
