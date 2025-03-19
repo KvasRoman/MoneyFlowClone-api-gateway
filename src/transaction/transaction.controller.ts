@@ -11,7 +11,7 @@ export class TransactionController {
         @Query('page') page: number,
         @Req() req) {
         const account: AccountValidateDTO = req.user.account;
-
+        Logger.log(req.headers, "headers")
         return await this.transactionService.getTransactions(account.id, page, 50)
 
     }

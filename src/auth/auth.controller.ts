@@ -22,6 +22,8 @@ export class AuthController {
 
     //Refresh token
     res.cookie('refreshToken', authServiceResult.refreshToken, {
+      domain: 'localhost',
+      path: '/',
       httpOnly: true, // Prevents access from JavaScript
       secure: true,   // Ensures cookie is sent only over HTTPS (for production)
       sameSite: 'strict', // CSRF protection
@@ -30,6 +32,7 @@ export class AuthController {
     // Send access token in response
     return res.json({ accessToken: authServiceResult.accessToken, user });
   }
+
   @Public()
   @Post('register')
   async register(@Body() data: { email: string; password: string },@Res() res: Response) {
